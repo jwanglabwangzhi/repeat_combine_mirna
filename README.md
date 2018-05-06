@@ -20,3 +20,26 @@ Prepare_gas_for_exons_and_introns使用GenomicArrayOfSets存储exon_iv和对应�
 ## Fouth day
 程序跑起来，第一个数据如果只用单端数据计算count，计算不出来。SRA的sra_instant挂掉了，只能单个从ENA上下载，但ENA上的SRA镜像是错误的，比对了一个文件，比对率几乎为0。  
 所以选择ENA上paired fastq文件，再测试。  
+
+## Fifth day
+比对命令：bowtie2 -x /home/biodancer/bioinfor_soft/file/index/hg19_bowtie2_index -1 ./ERR2309103_1.fastq -2 ./ERR2309103_2.fastq -S ERR2309103.sam  
+比对结果：
+
+'''
+55737508 reads; of these:
+  55737508 (100.00%) were paired; of these:
+    12640123 (22.68%) aligned concordantly 0 times
+    27234975 (48.86%) aligned concordantly exactly 1 time
+    15862410 (28.46%) aligned concordantly >1 times
+    ----
+    12640123 pairs aligned concordantly 0 times; of these:
+      2188950 (17.32%) aligned discordantly 1 time
+    ----
+    10451173 pairs aligned 0 times concordantly or discordantly; of these:
+      20902346 mates make up the pairs; of these:
+        13709765 (65.59%) aligned 0 times
+        5459696 (26.12%) aligned exactly 1 time
+        1732885 (8.29%) aligned >1 times
+87.70% overall alignment rate
+
+'''
