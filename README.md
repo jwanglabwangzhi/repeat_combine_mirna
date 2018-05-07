@@ -25,7 +25,7 @@ Prepare_gas_for_exons_and_introns使用GenomicArrayOfSets存储exon_iv和对应�
 比对命令：bowtie2 -x /home/biodancer/bioinfor_soft/file/index/hg19_bowtie2_index -1 ./ERR2309103_1.fastq -2 ./ERR2309103_2.fastq -S ERR2309103.sam  
 比对结果：
 
-'''
+```
 55737508 reads; of these:
   55737508 (100.00%) were paired; of these:
     12640123 (22.68%) aligned concordantly 0 times
@@ -42,4 +42,54 @@ Prepare_gas_for_exons_and_introns使用GenomicArrayOfSets存储exon_iv和对应�
         1732885 (8.29%) aligned >1 times
 87.70% overall alignment rate
 
-'''
+```
+数据是ok的。  
+下面进行转化，排序，和索引。  
+samtools view -bS ERR2309103.sam >ERR2309103.bam  
+samtools sort -m 5G ERR2309103.bam sorted_ERR2309103.bam # 不要加-n参数  
+samtools index sorted_ERR2309103.bam.bam sorted_ERR2309103.bam.bam.bai
+
+
+
+## 6th day
+正式运行EISAcount代码:
+python cursons_bam_get_eisa_counts.py --outdir ./resultdir --sample-name mesHMLE_polyAplus_rep1 --stranded ./sorted_ERR2309103.bam.bam
+跑不出结果，经过调试，问题出在了序列质量值的判断上，默认设为了50，但不同的测序平台得到的分数不同，我设为了30，可以出结果。  
+结果：  
+```
+Outdir: ./resultout
+Working on mesHMLE_polyAplus_rep1, treating as stranded.
+Count file will be ./abc/mesHMLE_polyAplus_rep1-stranded.tsv
+
+There are 4183 overlapping and 22151 nonoverlapping genes when analysed as stranded
+Getting counts for bam: ./sorted_ERR2309103.bam.bam
+Finished 1 reads
+Finished 5000001 reads
+Finished 10000001 reads
+Finished 15000001 reads
+Finished 20000001 reads
+Finished 25000001 reads
+Finished 30000001 reads
+Finished 35000001 reads
+Finished 40000001 reads
+Finished 45000001 reads
+Finished 50000001 reads
+Finished 55000001 reads
+Finished 60000001 reads
+Finished 65000001 reads
+Finished 70000001 reads
+Finished 75000001 reads
+Finished 80000001 reads
+Finished 85000001 reads
+Finished 90000001 reads
+Finished 95000001 reads
+Finished 100000001 reads
+Finished all. Could not match these chromosome names: set(['chrM'])
+Number of reads
+exon_counts-r1_strand        360864.0
+exon_counts-r2_strand      10870612.0
+intron_counts-r1_strand      970295.0
+intron_counts-r2_strand    12361334.0
+dtype: float64
+```
+
