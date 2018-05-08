@@ -54,7 +54,7 @@ samtools index sorted_ERR2309103.bam.bam sorted_ERR2309103.bam.bam.bai
 ## 6th day
 正式运行EISAcount代码:
 python cursons_bam_get_eisa_counts.py --outdir ./resultdir --sample-name mesHMLE_polyAplus_rep1 --stranded ./sorted_ERR2309103.bam.bam
-跑不出结果，经过调试，问题出在了序列质量值的判断上，默认设为了50，但不同的测序平台得到的分数不同，我设为了30，可以出结果。  
+跑不出结果，经过调试，问题出在了序列质量值的判断上，默认设为了50，但不同的测序平台得到的分数不同，我设为了30，可以出结果。这就是看源码的好处，找bug快。    
 结果：  
 ```
 Outdir: ./resultout
@@ -92,4 +92,23 @@ intron_counts-r1_strand      970295.0
 intron_counts-r2_strand    12361334.0
 dtype: float64
 ```
+
+## 8th day  
+终于可以访问这边的服务器了。  
+先把常用软件装一装，再把数据跑上，虽然可以用的核心不多，不过看起来还不错。  
+### 关于软件安装:
+这边的系统分配给每个人是一个类似虚拟机的子系统，只有8个核心，最底层的系统映射到一个一个路径到我的虚拟机的home目录下作为用户文件夹，文件夹名等于用户名。  
+最大的问题是没有权限如何装软件，需要权限必须到IT部找个人给你输密码才行，这不太现实。  
+最简单的安装，用编译好的软件不需要动用底层的c++,调用时写绝对路径就好。  
+但如果软件需要使用特定版本的编译器就有些麻烦。我不可能有权限装编译器。  
+想到了conda这个工具，装了个miniconda，首先把环境变量写进了我的文件夹的.bashrc文件。重新开一个ssh，就激活了conda环境。明显我的文件夹下的.bashrc优先级最高，python等软件都先使用conda下的库。这样似乎可以考虑在conda里安装各个版本的gcc了。  
+以前tensorflow还不能在anaconda库中使用的时候，就觉得conda不是无能的，很多东西无法安装。  
+1年过去了，anaconda的后台库更新了很多包，现在还有专门用于生物信息软件的分支叫bioconda。使用方法如下：  
+conda install -c bcbio 生信包名  
+如果上述方法都不能安装需要的软件，说明anaconda后台没有编译这个软件。conda作为包管理工具之所以装软件那么容易是因为anaconda用统一的系统编译了所有的软件。因为一致的编译方法就让这些软件之间的依赖关系很容易控制。  
+如果anaconda后台库没有编译某个python包，可以用pip再试试。  
+考虑conda管理所有工具，在conda眼里python，R，gcc都是一个库而已，是平行的关系。这样使用pip时，conda的环境变量找到了自己的库中有pip这个工具。pip工具链接远端镜像查看软件，然后下载安装。安装的时候整个系统中只要所有依赖都能满足就可以。  
+如果pip报错就需要根据错误，一步一步配置相应的gcc到conda，然后编译安装。  
+## 9th day
+批量跑的结果链接。  
 
